@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewreport" content="width=device-width, initial-scale=1.0">
+	<title>
+		HOME
+	</title>
+	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+	<link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="assessor-details.component.css" />
+    
+
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script> 
+	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+
+</head>
+<body>
+	<div id="logo">
+		<a href="https://navriti.com/"><img src="assets/images/logo.png"/></a>
+	</div>
+
+	<div class="loader" id='image' style='display: none;'></div>
+
+	<div class="top">
+		<ul class="nav navbar-right mr-3">
+			<li class="nav-item dropdown">
+				<a style="font-size: 15px;  color:rgb(202, 195, 195) ;" class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown">
+					mayurikishore.navriti@gmail.com (assessor)</a>
+				<ul style="background-color: #45a049; " class="dropdown-menu fade-up">
+					<li  style="border-bottom: 1px solid white;"><a style="color: white;" class="dropdown-item" routerLink="/changepassword">Change Password</a></li>
+					<li  style="border-bottom: 1px solid white;"><a style="color: white;" class="dropdown-item" routerLink="/updateprofile">Update Profile</a></li>
+					<li  style="border-bottom: 1px solid white;"><a style="color: white;" class="dropdown-item" routerLink="/logout" (click)="clear()">Logout</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	
+
+	<div class="container-fluid banner">
+		<div class="row">
+			<div class="col-md-12">
+				<nav class="navbar navbar-md">					
+					<ul class="nav navbar-left ml-0">
+					</ul>
+					<ul class="nav navbar-right mr-0">	
+						<li class="nav-item">
+							<a style="color: rgb(202, 195, 195); background-color : #4CAF50; border-radius: 4px;" class="nav-link" routerLink="/home">DASHBOARD</a>
+						</li>
+						<li class="nav-item">
+							<a style="color: rgb(202, 195, 195);" class="nav-link" routerLink="/batches">BATCHES</a>
+						</li>
+						<li class="nav-item">
+							<a style="color: rgb(202, 195, 195);" class="nav-link" routerLink="/bills">BILLS</a>
+						</li>
+						<li class="nav-item">
+							<a style="color: rgb(202, 195, 195);" class="nav-link" routerLink="/reports">REPORTS</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+
+            <div style="overflow-x: scroll; overflow-y: auto;" class="toggle1">
+				<form class=" mt-3 ml-3 mp-3">
+					<input type="button" (click)="toggle1()" value="GEOGRAPHICAL DATA">
+					<input style="margin-left: 15px;" type="text" id="search" (keyup)="on_key()" placeholder="Search Assessor" >
+				</form>
+				<table class="table-sortable" id="dt" style="width: 100%;">
+				<thead>
+				  <tr>
+					<th >Assessor Id</th>
+					<th >Assessor Name</th>
+					<th >Assessor Email</th>
+					<th >Assessor Phone</th>
+					<th >Assessor Alternate Phone</th>
+					<th >Allocation Type</th>
+					<th >Date of Upload</th>
+					<th >District</th>
+					<th >State</th>
+					<th >Adhaar No</th>
+					<th >Pan No</th>
+					<th >Assessor Status</th>
+					<th >Sector</th>
+					<th >Qualification Pack	(QP)</th>
+					<th >SSC Certification (Issued By)</th>
+					<th >SSC Certificate File Name</th>
+					<th >SSC Certification (Date of Issue)</th>
+					<th >SSC Certification (Date of Expiry)</th>
+					<th >Languages Known</th>
+					<th >Assessor Source</th>
+					<th >Username (Sourced By)</th>
+					<th >Bank Name</th>
+					<th >Bank Acc.No</th>
+					<th >IFSC</th>
+					<th >Check FileName</th>
+					<th >Mou FileName</th>
+					<th >Assessor Image FileName</th>
+					<th >Resume FileName</th>
+					<th >Education Cerificate FileName</th>
+					<th >Experience Certificate FileName</th>
+					
+				  </tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let data of assessorData | filter:term | paginate: { itemsPerPage: 5, currentPage: page, totalItems: totalRecords }">
+						<td>{{data.AssessorId}}</td>
+						<td>{{data.AssessorName}}</td>
+						<td>{{data.AssessorEmail}}</td>
+						<td>{{data.AssessorPhone}}</td>
+						<td>{{data.AssessorAlternatePhone}}</td>
+						<td>{{data.AllocationType}}</td>
+						<td>{{data.DateOfUpload}}</td>
+						<td>{{data.District}}</td>
+						<td>{{data.State}}</td>
+						<td>{{data.AadhaarNumber}}</td>
+						<td>{{data.PanCardNumber}}</td>
+						<td>{{data.AssessorStatus}}</td>
+						<td>{{data.Sector}}</td>
+						<td>{{data.QualificationPacks}}</td>
+						<td>{{data.SscCertificationIssuedBy}}</td>
+						<td>{{data.SscCertificateFileName}}</td>
+						<td>{{data.SscCertificationIssuedDate}}</td>
+						<td>{{data.SscCertificationExpiryDate}}</td>
+						<td>{{data.LanguagesKnown}}</td>
+						<td>{{data.AssessorSource}}</td>
+
+						<td>{{data.SourcedByUserName}}</td>
+						<td>{{data.BankName}}</td>
+						<td>{{data.BankAccountNumber}}</td>
+						<td>{{data.IFSC}}</td>
+						<td>{{data.ChequeFileName}}</td>
+
+						<td>{{data.MouFileName}}</td>
+						<td>{{data.AssessorImageFileName}}</td>
+						<td>{{data.ResumeFileName}}</td>
+						<td>{{data.EducationCertificateFileName}}</td>
+						<td>{{data.ExperienceCertificateFileName}}</td>
+
+
+					</tr>
+				</tbody>
+			  </table>
+			  <pagination-controls style="color: white; font-size: 14px;" maxSize="3"
+					  directionLinks="true"
+					  
+                    (pageChange)="page= $event">
+				</pagination-controls>
+			</div>
+			<div class="toggle2" style="display: None; margin-left:45px;">
+				<form class="ml-3 mt-3 mp-3">
+					<input type="button" value="CERTIFICATION DETAILS"  style="width: auto;" (click)='toggle2()'>
+				</form>
+				<table class="table-sortable" id="dt" style="width: 100%; position:absolute; left: 0; right: 0;">
+					<thead>
+					  <tr>
+						<th >State Id</th>
+						<th >State Name</th>
+						<th >Assessor Count</th>
+						
+					  </tr>
+					</thead>
+					<tbody>
+						<tr style="font-size: 25px; padding:20px 20px;" *ngFor="let data of stateData">
+							<td>{{data.StateId}}</td>
+							<td><a style="color: #45a049;" [routerLink]="['/home']">{{data.StateName}}</a></td>
+							<td>{{data.AssessorCount}}</td>
+						</tr>
+						
+					</tbody>
+				</table>
+
+			</div>
+		
+		</div>
+		
+    </div>
+</body>
+</html>
