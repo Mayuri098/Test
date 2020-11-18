@@ -1,0 +1,20 @@
+<div id="logo">
+    <a href="https://navriti.com/"><img src="assets/images/logo.png"/></a>
+</div>
+
+<div class="top">
+        <ul class="nav navbar-right mr-3">
+            <li class="nav-item dropdown mt-0">
+                <a style="font-size: 15px;  color:rgb(202, 195, 195) ; cursor: pointer;" class="nav-link" (click)="back_function()">Back</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a style="font-size: 15px;  color:rgb(202, 195, 195) ;" class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown">
+                    {{username}} (assessor)</a>
+                <ul style="background-color: #45a049; " class="dropdown-menu fade-up">
+                    <li  style="border-bottom: 1px solid white;"><a style="color: white;" class="dropdown-item" routerLink="/changepassword">Change Password</a></li>
+                    <li  style="border-bottom: 1px solid white;"><a style="color: white;" class="dropdown-item" routerLink="/updateprofile">Update Profile</a></li>
+                    <li  style="border-bottom: 1px solid white;"><a style="color: white;" class="dropdown-item" routerLink="/logout" (click)="clear()">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+</div>
