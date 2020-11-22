@@ -17,9 +17,18 @@ export const environment = {
   URL_reset_password : 'https://uap-demo-api.certiplate.com/json/asynconeway/GetResetPasswordResponseDataRequest',
   URL_sectorwise_details : 'https://uap-demo-api.certiplate.com/json/asynconeway/GetSectorwiseAssessorCertificationStatusCountDataRequest',
   URL_QPwise_details : 'https://uap-demo-api.certiplate.com/json/asynconeway/GetQPwiseAssessorCertificationStatusCountDataRequest',
-  URL_assessor_cert_details : 'http://uap-demo-api.certiplate.com/json/asynconeway/GetAssessorCertificationDetailedDataRequest',
+  URL_assessor_cert_details : 'https://uap-demo-api.certiplate.com/json/asynconeway/GetAssessorCertificationDetailedDataRequest',
+  URL_statewise_detail : 'https://uap-demo-api.certiplate.com/json/asynconeway/GetStatewiseAssessorCountDataRequest',
   URL_change_password : 'https://uap-demo-api.certiplate.com/json/asynconeway/ChangeUserPasswordRequest',
 
+
+
+  Proctor_Count_Views_URL:
+    "https://uap-demo-api.certiplate.com/json/asynconeway/GetStateAndLanguagewiseProctorCountDataRequest",
+  Proctor_Count_Views_Api_Key: "ddcd795c-1051-4bc6-8b31-c5b60b68544c",
+  Proctor_Attributes_URL:
+    "https://uap-demo-api.certiplate.com/json/asynconeway/GetStateAndLanguagewiseProctorDetailedDataRequest",
+  Proctor_Attributes_Api_Key: "ddcd795c-1051-4bc6-8b31-c5b60b68544c",
 
 
 

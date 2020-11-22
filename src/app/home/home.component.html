@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
 <head>
 	
@@ -9,11 +9,11 @@
 	</title>
 	<meta charset="UTF-8">
 
-	<!--links for date picker-->
+	
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   	<link rel="stylesheet" type="text/html" href="/resources/demos/style.css">
 
-	<!--scripts for datepicker-->
+	
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
@@ -22,74 +22,27 @@
 	<link rel="stylesheet" type="text/css" href="home.component.css" />
 </head>
 <body>
-	<div id="logo">
-		<a href="https://navriti.com/"><img src="assets/images/logo.png"/></a>
-	</div>
-
-	
+	<app-header></app-header>
 	<div class="loader" id='image' style='display: none;'></div>
-	
-	<div class="top">
-			<ul class="nav navbar-right mr-3">
-				<li class="nav-item dropdown">
-					<a style="font-size: 15px;  color:rgb(202, 195, 195) ;" class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown">
-						mayurikishore.navriti@gmail.com (assessor)</a>
-					<ul style="background-color: #45a049; " class="dropdown-menu fade-up">
-						<li  style="border-bottom: 1px solid white;"><a style="color: white;" class="dropdown-item" routerLink="/changepassword">Change Password</a></li>
-						<li  style="border-bottom: 1px solid white;"><a style="color: white;" class="dropdown-item" routerLink="/updateprofile">Update Profile</a></li>
-						<li  style="border-bottom: 1px solid white;"><a style="color: white;" class="dropdown-item" routerLink="/logout" (click)="clear()">Logout</a></li>
-					</ul>
-				</li>
-			</ul>
-		</div>
-	
 		
 	<div class="container-fluid banner">
 		<div class="row">
 			<div class="col-md-12">
 				<nav class="navbar navbar-md mt-0">
 					<ul class="nav navbar-left mt-0 pt-0 ml-0"></ul>
-					<ul class="nav navbar-right mt-0 pt-0 mr-0">	
-						<li>
-							<a style="color: rgb(202, 195, 195); background-color : #4CAF50; border-radius: 4px;" class="nav-link" routerLink="/home">DASHBOARD</a>
-						</li>
-						<li>
-							<a style="color: rgb(202, 195, 195);" class="nav-link" routerLink="/batches" >BATCHES</a>
-						</li>
-						<li>
-							<a style="color: rgb(202, 195, 195);" class="nav-link" routerLink="/bills">BILLS</a>
-						</li>
-						<li>
-							<a style="color: rgb(202, 195, 195);" class="nav-link" routerLink="/reports">REPORTS</a>
-						</li>
-					</ul>
-
+					<app-navbar></app-navbar>
 				</nav>
 			</div>		
 
-			<div class="row ml-5 mt-2" style=" display: flex; align-items: center; justify-content: center;">
-				<form>
-				<div class="column  pl-5">	
-					START DATE : <input type="text" id="sdate" placeholder="DD-MMM-YYYY" formControlName="startdate" class="form-control" mdbInput bsDatepicker [(bsValue)]="sdate"  value="{{sdate | date :'dd-MMM-yyyy'}}" required/>
-				</div>
-				<div class="column  pl-5">	
-					END DATE :  <input type="text" id="edate" placeholder="DD-MMM-YYYY" formControlName="enddate" class="form-control" mdbInput bsDatepicker [(bsValue)]="edate"  value="{{edate | date :'dd-MMM-yyyy'}}"   required/>
-				</div>
-				<div class="column mt-3  pl-5" >	
-					<input type="button" value="SUBMIT"  (click)="submit_date()">
-				</div>
-				</form>
-			</div>
-			<div class="table_view" style="width :100%;">
+			<div class="table_view ml-3 mr-3" style="width :100%;">
 			<table class="table-sortable" id="dt">
-
 				<thead>
 				  <tr>
-					<th rowspan="2">SID</th>
-					<th rowspan="2">SECTOR</th>
-					<th colspan="6">GOVERNMENT</th>
-					<th colspan="5">INSTITUTION</th>
-					<th colspan="2">ORGANIZATION</th>
+					<th rowspan="2">Sector Id</th>
+					<th rowspan="2">Sector</th>
+					<th colspan="6">Government</th>
+					<th colspan="5">Institution</th>
+					<th colspan="2">Organization</th>
 				  </tr>
 				  <tr>
 					<th>Leads</th>
@@ -108,8 +61,8 @@
 				</tr>
 				</thead>
 				<tbody>
-					<tr *ngFor='let data of userData'>
-					<td>{{data.SectorId}}</td>
+					<tr *ngFor='let data of userData; let i =index'>
+					<td>{{i+1}}</td>
 					<td id="sectors"><a [routerLink]="['/qp_wise_details']" [queryParams]="{sec_id : data.SectorId}">{{data.SectorName}}</a></td>
 					<td><a [routerLink]="['/assessor_certification_details']" [queryParams]="{sec_id : data.SectorId, qp_id : '0', searchType : 'GLC'}">{{data.GovernmentLeadCount}}</a></td>
 					<td><a [routerLink]="['/assessor_certification_details']" [queryParams]="{sec_id : data.SectorId, qp_id : '0', searchType : 'GAC'}">{{data.GovernmentApprovedCount}}</a></td>
@@ -129,22 +82,65 @@
 			  </table>
 			  </div>
 		</div>
-		<div 
-			class="modal-footer mx-5 pt-3 mb-1 justify-content-center fixed-bottom">
-			<p style="color: rgb(255, 255, 255);" class="font-small  d-flex">
-			  © 2020 Copyright:
-			  <a style="color: rgb(240, 234, 234);"
-				href="https://navriti.com/"
-				class=" ml-1"
-				target="_blank"
-				><b> Navriti Technologies PVT LTD. </b></a
-			  >
-			</p>
-		  </div>
+		<app-footer></app-footer>
 	</div>
-
-	<!--Custom scripts-->
 
 </body>
 
+</html>-->
+
+
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <section>
+	  <app-header></app-header>
+	  <div class="col-md-12">
+		<nav class="navbar navbar-md mt-3">					
+			<app-navbar></app-navbar>
+		</nav>
+	</div>
+      
+      <div class="borderline"></div>
+
+	  <div class="spinner-border text-primary" id="image" style="display: none"></div>
+	  
+      <div class="container mt-3">
+        <table class="mdl-data-table stripe hover cell-border order-column display" id="myTable">
+        <thead>
+            <tr>
+              <th rowspan="2">Sector Id</th>
+              <th rowspan="2">Sector</th>
+              <th colspan="6">Government</th>
+              <th colspan="5">Institution</th>
+              <th colspan="2">Organization</th>
+            </tr>
+            <tr>
+              <th>Leads</th>
+              <th>Approved (Not Certified)</th>
+              <th>Certified</th>
+              <th>Certificate Expired</th>
+              <th>Total</th>
+              <th>Distinct Total Count</th>
+              <th>Leads</th>
+              <th>Approved (Not Certified)</th>
+              <th>Certified</th>
+              <th>Total</th>
+              <th>Distinct Total Count</th>
+              <th>Total</th>
+              <th>Unique Total</th>
+          </tr>
+          </thead>
+        </table>
+      </div>
+      
+      <app-footer></app-footer>
+    </section>
+  </body>
 </html>

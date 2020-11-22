@@ -12,9 +12,12 @@ export class ChangePasswordComponent implements OnInit {
   new_password: HTMLInputElement;
   conf_new_password : HTMLInputElement
 
+  username : any;
+
   constructor(private route: Router) { }
 
   ngOnInit(): void {
+    this.username = sessionStorage.getItem("username")
   }
   updatepassword(){
     this.old_password = document.getElementById('oldpassword') as HTMLInputElement;

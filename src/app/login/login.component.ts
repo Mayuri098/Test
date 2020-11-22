@@ -93,6 +93,7 @@ export class LoginComponent implements OnInit
         localStorage.setItem("USerId",json.AuthenticationResponseData.UserId);
         sessionStorage.setItem("UserId",json.AuthenticationResponseData.UserId);
         sessionStorage.setItem("SessionId",json.AuthenticationResponseData.SessionId);
+        sessionStorage.setItem("UserroleId",json.AuthenticationResponseData.UserRoleId);
 
         if (json.AuthenticationResponseData.Message == 'User authentication success')
         {

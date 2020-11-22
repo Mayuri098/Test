@@ -8,9 +8,15 @@ body{
 	width: 100%;;
 	height: auto;
 	background-repeat: no-repeat;
-	background-image: url('/assets/images/bg.jpg') ;
+	background-image: url('/assets/images/test.jpg') ;
 }
 
+.borderline {
+    border-bottom: 1px solid white;
+    left: 3%;
+    right: 3%;
+    position: absolute;
+}
 
 .banner, body{
 	height: 100vh;

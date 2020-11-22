@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit {
         if (json.LogoutResponseData.Message == "User logged out")
         {
           sessionStorage.clear();
-            this.route.navigate(['logout']);
+            this.route.navigate(['login']);
         }
         else if(json.LogoutResponseData.Message =="User has already been logged out"){
           this.route.navigate(['login']);

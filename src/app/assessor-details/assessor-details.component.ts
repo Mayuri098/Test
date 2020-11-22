@@ -2,19 +2,45 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import * as Highcharts from 'highcharts'
+import { Chart } from 'chart.js';
 
+
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { ExcelService } from '../service/excel.service';
+import { ModalComponent } from '../modal/modal.component';
+import "datatables.net";
+
+
+var json_data: any;
 @Component({
   selector: 'app-assessor-details',
   templateUrl: './assessor-details.component.html',
   styleUrls: ['./assessor-details.component.css']
 })
+
+
 export class AssessorDetailsComponent implements OnInit {
+
+  modalRef: BsModalRef;
+
+  /*currentRate = 8;
+  title = 'D3 Barchart with Angular 10';
+  width: number;
+  height: number;
+  margin = { top: 20, right: 20, bottom: 30, left: 40 };
+  x: any;
+  y: any;
+  svg: any;
+  g: any;*/
+
+  chart = [];
 
   term : any;
   chartOptions = {};
   counter = 0;
   Highcharts = Highcharts;
-  stateData : any;
+  statewiseData : any;
   assessorData : any;
   data:any;
   state_id:any;
@@ -24,23 +50,34 @@ export class AssessorDetailsComponent implements OnInit {
 
   page:number = 1;
   totalRecords:number
+  stateid = [];
+  x_data =  [];
+  y_data = [];
+  color_array = ["#28B7BB", "#61AE48","#CB36D1","#F5BB00","#c45850","#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"];
+  bgColor = [];
+  chartdata = {};
 
+  username : any;
 
-  chart_data =  [];
-  constructor(private route: Router) { }
+  constructor(private route: Router, private modalService: BsModalService, private excelService:ExcelService) {
+
+   }
   ngOnInit(){
 
+    this.username = sessionStorage.getItem("username")
+
     /** Calling API to get assessor certification details */
-    let  url =  new URL(window.location.href)
-    var SecId = url.searchParams.get('sec_id');
-    var qp_Id = url.searchParams.get('qp_id');
-    var SearchType = url.searchParams.get('searchType');
-    this.call_ajax(SecId, qp_Id, SearchType)
+    //let  url =  new URL(window.location.href)
+    var SecId = sessionStorage.getItem('SectorId');
+    var qp_Id = sessionStorage.getItem('QPID');
+    var SearchType = sessionStorage.getItem('SearchType');
+    this.call_statewise_ajax(SecId, qp_Id, SearchType)
   }
 
-  call_ajax(SecId, qp_Id, SearchType){
+
+  call_statewise_ajax(SecId, qp_Id, SearchType){
     $.ajax({
-      url: environment.URL_assessor_cert_details,
+      url: environment.URL_statewise_detail,
       type: 'POST',
       dataType: 'json',
       data: {
@@ -48,8 +85,8 @@ export class AssessorDetailsComponent implements OnInit {
         SectorId : SecId,
         QualificationPackId : qp_Id,
         SearchType : SearchType,
-        StartDate : sessionStorage.getItem('StartDate'),
-        EndDate : sessionStorage.getItem('EndDate')
+        UserId : sessionStorage.getItem('UserId'),
+        UserRoleId : sessionStorage.getItem('UserroleId')
       }, 
 
       beforeSend: function(){
@@ -61,9 +98,275 @@ export class AssessorDetailsComponent implements OnInit {
       success: (data) => 
       {
         var json = JSON.parse(JSON.stringify(data));
+        let i = -1;
+        if (json.StatewiseAssessorCountData.StatusId == "1"){
+          this.statewiseData = json.StatewiseAssessorCountData.StatewiseAssessorData;
+            for (var item in this.statewiseData){
+              this.state_id = this.statewiseData[item].StateId
+              this.state_name =  this.statewiseData[item].StateName
+
+              this.assessor_count = this.statewiseData[item].AssessorCount
+                this.stateid.push(this.state_id);
+                //this.x_data.push(this.state_name + '(' + this.state_id + ')');
+                this.x_data.push(this.state_name);
+                this.y_data.push(this.assessor_count);
+                i++;
+                this.bgColor.push(this.color_array[i]);
+            }
+            console.log(this.stateid)
+            console.log(this.x_data)
+            console.log(this.y_data)
+            setTimeout(() => {
+              this.state_chart( this.stateid, this.x_data, this.y_data, this.bgColor)
+          }, 500);
+          //this.stateData = json.AssessorCertificationDetailedData.StatewiseAssessorData;
+          //this.totalRecords = this.assessorData.length
+        }
+      },
+      error: function (err) {
+        console.log('error:' + err);
+      },
+    });
+  }
+
+
+  state_chart(sid,xlabel,ydata,bgcolors){
+    const that = this;
+    this.chart = new Chart('myChart',{
+      type: 'bar',
+      options: {
+
+        layout: {
+          padding: {
+              left: 40,
+              right: 40,
+              top: 20,
+              bottom: 20
+          }
+      },
+        
+        hover : {
+          mode : 'index',
+          events: ['mousemove'],
+          onHover : (event, chartElement) => {
+            event.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+            event.target.style.colorr = chartElement[0] ? 'green' : '#45a049';
+        }
+        },
+        onClick: function(e,i)  {
+          e = i[0];
+          //alert(sid[e._index]);
+          var x_value = this.data.labels[e._index];
+          sessionStorage.setItem("stateid",x_value)
+
+
+          //$('.toggle2').css('display','none');
+          $('.toggle1').css('display','block');
+          $('.toggle2').css('display','block').slideUp('slow')
+          that.assessor_cert_detail(sid[e._index]);
+          
+      },
+        legend: {
+          labels: {
+              fontColor: "white",
+              fontSize: 15
+          }
+      },
+        scales: {
+          yAxes: [{
+            barThickness : 40,
+            gridLines:{
+              zeroLineColor:"white"
+            },
+            ticks: {
+              beginAtZero: true,
+              fontColor: 'white',
+            }
+          }],
+          xAxes: [{
+            gridLines:{
+              zeroLineColor:"white"
+            },
+            ticks: {
+              fontColor: 'white',
+              font : 'bold'
+            }
+          }]
+        },
+        responsive: true,
+        title: {
+          display: true,
+          text: 'Geographywise Distribution', 
+          fontColor: "white",
+          fontSize: 18 ,
+        },
+      },
+      data: {
+        labels: xlabel,
+        datasets: [
+          {
+            
+            type: 'bar',
+            label: 'Statewise Assessor Distribution',
+            data: ydata,
+            backgroundColor: bgcolors,
+            borderColor: bgcolors,
+            fill: true,
+          },
+          
+        ]
+      }
+    });
+  }
+
+  GetDynamicColor() {
+    var r = Math.floor(Math.random() * 255);
+    var g = Math.floor(Math.random() * 255);
+    var b = Math.floor(Math.random() * 255);
+    return "rgb(" + r + "," + g + "," + b + ")";
+}
+
+  scrolldown(){
+    $('.toggle1').css('display','none').slideDown('slow');
+    $('.toggle2').show('slow')
+  }
+
+  openModal() {
+    /*this.modalRef = this.modalService.show(ModalComponent ,  {
+      initialState: {
+        title: 'Assessor Certification Details',
+        data: {}
+      },
+      class: 'modal-dialog-centered modal-lg',
+    });*/
+
+    $('.toggle1').css('display', 'block');
+    $('.toggle2').css('display', 'none'); 
+    
+
+
+    //this.assessor_cert_detail();
+
+  }
+  
+
+  assessor_cert_detail(varStateId){
+
+    //let  url =  new URL(window.location.href)
+    var SecId = sessionStorage.getItem('SectorId');
+    var qp_Id = sessionStorage.getItem('QPID');
+    var SearchType = sessionStorage.getItem('SearchType');
+
+    $(function () {
+      var table = $("#myTable").DataTable({
+        destroy: true,
+        lengthMenu: [5, 10, 15, 25, 50, 100],
+        pageLength: 5,
+        scrollY: "35vh",
+        serverSide: false,
+        scrollX: true,
+        scrollCollapse: true,
+        responsive: true,
+        order: [1, "asc"],
+        initComplete: function (settings, json) {
+          json_data = json;
+        },
+        columnDefs: [
+          {
+            targets: ["_all"],
+            className: "mdc-data-table__cell",
+            render: function(data,type,row){
+              var color = 'black';
+              return '<span style="color:' + color + '">' + data + '</span>';
+            }
+          },
+        ],
+
+
+        ajax:{
+          url: environment.URL_assessor_cert_details,
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            ApiKey : environment.ApiKey,
+            SectorId : SecId,
+            QualificationPackId : qp_Id,
+            StateId : varStateId,
+            SearchType : SearchType,
+            UserId : sessionStorage.getItem('UserId'),
+            UserRoleId : sessionStorage.getItem('UserroleId')
+          }, 
+          dataSrc: "AssessorCertificationDetailedData.AssessorData",
+          beforeSend: function(){
+            $('#image').show();
+          },
+          complete: function(){
+            $('#image').hide();
+          },
+        },
+
+        columns: [
+          {data : "AssessorId"},
+          {data : "AssessorName"},
+          {data : "AssessorEmail"},
+          {data : "AssessorPhone"},
+          {data : "AssessorAlternatePhone"},
+
+          {data : "AllocationType"},
+          {data : "DateOfUpload"},
+          {data : "District"},
+          {data : "State"},
+          {data : "AadhaarNumber"},
+
+          {data : "PanCardNumber"},
+          {data : "AssessorStatus"},
+          {data : "Sector"},
+          {data : "QualificationPacks"},
+          {data : "SscCertificationIssuedBy"},
+
+
+          {data : "SscCertificateFileName"},
+          {data : "SscCertificationIssuedDate"},
+          {data : "SscCertificationExpiryDate"},
+          {data : "LanguagesKnown"},
+          {data : "AssessorSource"},
+
+          {data : "SourcedByUserName"},
+          {data : "BankName"},
+          {data : "BankAccountNumber"},
+          {data : "IFSC"},
+          {data : "ChequeFileName"},
+
+          {data : "MouFileName"},
+          {data : "AssessorImageFileName"},
+          {data : "ResumeFileName"},
+          {data : "EducationCertificateFileName"},
+          {data : "ExperienceCertificateFileName"},
+          
+        ]
+      });
+    })
+    
+    $.ajax({
+      url: environment.URL_assessor_cert_details,
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        ApiKey : environment.ApiKey,
+        SectorId : SecId,
+        QualificationPackId : qp_Id,
+        StateId : varStateId,
+        SearchType : SearchType,
+        UserId : sessionStorage.getItem('UserId'),
+        UserRoleId : sessionStorage.getItem('UserroleId')
+      }, 
+      success: (data) => 
+      {
+        var json = JSON.parse(JSON.stringify(data));
         if (json.AssessorCertificationDetailedData.StatusId == "1"){
-          this.assessorData = json.AssessorCertificationDetailedData.AssessorData;
-          this.stateData = json.AssessorCertificationDetailedData.StatewiseAssessorData;
+          this.assessorData = json.AssessorCertificationDetailedData.AssessorData
+
+          //this.stateData = json.AssessorCertificationDetailedData.StatewiseAssessorData;
           this.totalRecords = this.assessorData.length
         }
       },
@@ -71,8 +374,10 @@ export class AssessorDetailsComponent implements OnInit {
         console.log('error:' + err);
       },
     });
-
   }
+
+
+  
 
   on_key(){
     var input, filter,cell, table, th,tr, td, i, txtValue;
@@ -96,6 +401,12 @@ export class AssessorDetailsComponent implements OnInit {
       }
     }
 }
+}
+
+
+download_file(){
+  this.excelService.exportAsExcelFile(this.assessorData, 'assessor_data');
+
 }
 
 
@@ -155,48 +466,18 @@ export class AssessorDetailsComponent implements OnInit {
   }
 
   toggle1(){
-    $('.toggle1').css('display', 'none');
-    $('.toggle2').css('display', 'block'); 
+    $('.toggle1').hide();
+    $('.toggle2').show(); 
   }
   toggle2(){
     $('.toggle2').css('display', 'none');
     $('.toggle1').css('display', 'block');
   }
-  clear(){
-    $.ajax({
-      url: environment.URL_logout_authentication,
-      type: 'POST',
-      dataType: 'json',
-      data: {
-        ApiKey : environment.ApiKey,
-        UserId : localStorage.getItem("USerId"),
-        SessionId : sessionStorage.getItem("SessionId"),
-      }, 
-      success: (data) => {
-        var json = JSON.parse(JSON.stringify(data));
-        localStorage.setItem(json.LogoutResponseData.Message, JSON.stringify(data));
-        if (json.LogoutResponseData.Message == "User logged out")
-        {
-          sessionStorage.clear();
-            this.route.navigate(['logout']);
-        }
-        else if(json.LogoutResponseData.Message =="User has already been logged out"){
-          this.route.navigate(['login']);
-        }
-        else {
-          document.getElementById('warning').innerHTML =
-          '<b><h2>' +
-          json.CandidateAssessmentAuthentication.Message +
-          '</h2></b>';
-        $('#login').css('display', 'block');
-        $('#log-in').css('display', 'none');}
-      },
-      error: function (err) {
-        console.log('error:' + err);
-        $('#login').css('display', 'block');
-        $('#log-in').css('display', 'none');
-      },
-    });
+  
 
-  }
+
+
+  
+
+
 }

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import "datatables.net";
 
 
 
-
+var json_data: any;
 @Component({
   selector: 'app-job-role',
   templateUrl: './job-role.component.html',
@@ -14,26 +15,370 @@ export class JobRoleComponent implements OnInit {
 
 
   userData : any;
+  username : any;
 
   constructor(private route: Router) { }
 
   ngOnInit() {
-    let url1 = window.location.href.split('=');
-    console.log(url1)
-    var SecId = url1[url1.length-1]
-    this.call_ajax(SecId)
+
+    this.username = sessionStorage.getItem("username")
+
+    //let url1 = window.location.href.split('=');
+    //console.log(url1)
+    //var SecId = url1[url1.length-1]
+    //this.call_ajax(SecId)
+
+
+
+    $(function () {
+      var table = $("#myTable").DataTable({
+        lengthMenu: [5, 10, 15, 25, 50, 100],
+        pageLength: 5,
+        scrollY: "35vh",
+        serverSide: false,
+        scrollX: true,
+        scrollCollapse: true,
+        responsive: true,
+        order: [1, "asc"],
+        initComplete: function (settings, json) {
+          json_data = json;
+        },
+        columnDefs: [
+          {
+            targets: ["_all"],
+            className: "mdc-data-table__cell",
+            render: function(data,type,row){
+              var color = 'black';
+              return '<span style="color:' + color + '">' + data + '</span>';
+            }
+          },
+        ],
+        ajax: {
+          url: environment.URL_QPwise_details,
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            ApiKey : environment.ApiKey,
+            SectorId : sessionStorage.getItem('SectorId'),
+            UserId : sessionStorage.getItem("UserId"),
+            UserRoleId : sessionStorage.getItem("UserroleId")
+          },
+          dataSrc: "QPwiseAssessorCertificationStatusCountData.CertificationStatusData",
+          beforeSend: function(){
+            $('#image').show();
+          },
+          complete: function(){
+            $('#image').hide();
+          },
+        },
+
+        columns: [
+          { data: "SectorId" },
+          { data: "SectorName"},
+
+          { data: "QualificationPackId",},
+          { data: "QualificationPackCode",},
+          { data: "QualificationPackName",},
+
+          { data: "GovernmentLeadCount",
+          render: function (data: any, type: any, row: any, meta: any) {
+            if (row.GovernmentLeadCount > 0) {
+              var a =
+                '<a style="color: black" _ngcontent-kci-c162="" ng-reflect-router-link="/assessor_certification_details" href="/assessor_certification_details">' +
+                row.GovernmentLeadCount +
+                `</button>`;
+              return a;
+            } else {
+              return '<span style="color:black">' + data + '</span>';
+            }
+          },
+        },
+
+
+          { data: "GovernmentApprovedCount",
+          render: function (data: any, type: any, row: any, meta: any) {
+            if (row.GovernmentApprovedCount > 0) {
+              var a =
+                '<a style="color: black" _ngcontent-kci-c162="" ng-reflect-router-link="/assessor_certification_details" href="/assessor_certification_details">' +
+                row.GovernmentApprovedCount +
+                `</button>`;
+              return a;
+            } else {
+              return '<span style="color:black">' + data + '</span>';
+            }
+          },
+        },
+
+
+          { data: "GovernmentCertifiedCount",
+          render: function (data: any, type: any, row: any, meta: any) {
+            if (row.GovernmentCertifiedCount > 0) {
+              var a =
+                '<a style="color: black" _ngcontent-kci-c162="" ng-reflect-router-link="/assessor_certification_details" href="/assessor_certification_details">' +
+                row.GovernmentCertifiedCount +
+                `</button>`;
+              return a;
+            } else {
+              return '<span style="color:black">' + data + '</span>';
+            }
+          },
+        },
+
+
+          { data: "GovernmentExpiredCount",
+          render: function (data: any, type: any, row: any, meta: any) {
+            if (row.GovernmentExpiredCount > 0) {
+              var a =
+                '<a style="color: black" _ngcontent-kci-c162="" ng-reflect-router-link="/assessor_certification_details" href="/assessor_certification_details">' +
+                row.GovernmentExpiredCount +
+                `</button>`;
+              return a;
+            } else {
+              return '<span style="color:black">' + data + '</span>';
+            }
+          },
+        },
+
+
+          { data: "GovernmentTotalCount",
+          render: function (data: any, type: any, row: any, meta: any) {
+            if (row.GovernmentTotalCount > 0) {
+              var a =
+                '<a style="color: black" _ngcontent-kci-c162="" ng-reflect-router-link="/assessor_certification_details" href="/assessor_certification_details">' +
+                row.GovernmentTotalCount +
+                `</button>`;
+              return a;
+            } else {
+              return '<span style="color:black">' + data + '</span>';
+            }
+          },
+        },
+
+
+          { data: "GovernmentDistinctTotalCount",
+          render: function (data: any, type: any, row: any, meta: any) {
+            if (row.GovernmentDistinctTotalCount > 0) {
+              var a =
+                '<a style="color: black" _ngcontent-kci-c162="" ng-reflect-router-link="/assessor_certification_details" href="/assessor_certification_details">' +
+                row.GovernmentDistinctTotalCount +
+                `</button>`;
+              return a;
+            } else {
+              return '<span style="color:black">' + data + '</span>';
+            }
+          },
+        },
+
+          { data: "InstitutionLeadCount",
+          render: function (data: any, type: any, row: any, meta: any) {
+            if (row.InstitutionLeadCount > 0) {
+              var a =
+                '<a style="color: black" _ngcontent-kci-c162="" ng-reflect-router-link="/assessor_certification_details" href="/assessor_certification_details">' +
+                row.InstitutionLeadCount +
+                `</button>`;
+              return a;
+            } else {
+              return '<span style="color:black">' + data + '</span>';
+            }
+          },
+        },
+
+
+          { data: "InstitutionApprovedCount" ,
+          render: function (data: any, type: any, row: any, meta: any) {
+            if (row.InstitutionApprovedCount > 0) {
+              var a =
+                '<a style="color: black" _ngcontent-kci-c162="" ng-reflect-router-link="/assessor_certification_details" href="/assessor_certification_details">' +
+                row.InstitutionApprovedCount +
+                `</button>`;
+              return a;
+            } else {
+              return '<span style="color:black">' + data + '</span>';
+            }
+          },
+        },
+
+
+          { data: "InstitutionCertifiedCount",
+          render: function (data: any, type: any, row: any, meta: any) {
+            if (row.InstitutionCertifiedCount > 0) {
+              var a =
+                '<a style="color: black" _ngcontent-kci-c162="" ng-reflect-router-link="/assessor_certification_details" href="/assessor_certification_details">' +
+                row.InstitutionCertifiedCount +
+                `</button>`;
+              return a;
+            } else {
+              return '<span style="color:black">' + data + '</span>';
+            }
+          },
+        },
+
+
+          { data: "InstitutionTotalCount",
+          render: function (data: any, type: any, row: any, meta: any) {
+            if (row.InstitutionTotalCount > 0) {
+              var a =
+                '<a style="color: black" _ngcontent-kci-c162="" ng-reflect-router-link="/assessor_certification_details" href="/assessor_certification_details">' +
+                row.InstitutionTotalCount +
+                `</button>`;
+              return a;
+            } else {
+              return '<span style="color:black">' + data + '</span>';
+            }
+          },
+        },
+
+
+          { data: "InstitutionDistinctTotalCount",
+          render: function (data: any, type: any, row: any, meta: any) {
+            if (row.InstitutionDistinctTotalCount > 0) {
+              var a =
+                '<a style="color: black" _ngcontent-kci-c162="" ng-reflect-router-link="/assessor_certification_details" href="/assessor_certification_details">' +
+                row.InstitutionDistinctTotalCount +
+                `</button>`;
+              return a;
+            } else {
+              return '<span style="color:black">' + data + '</span>';
+            }
+          },
+        },
+
+          { data: "TotalCount",
+          render: function (data: any, type: any, row: any, meta: any) {
+            if (row.TotalCount > 0) {
+              var a =
+                '<a style="color: black" _ngcontent-kci-c162="" ng-reflect-router-link="/assessor_certification_details" href="/assessor_certification_details">' +
+                row.TotalCount +
+                `</button>`;
+              return a;
+            } else {
+              return '<span style="color:black">' + data + '</span>';
+            }
+          },
+        },
+
+
+          { data: "DistinctTotalCount",
+          render: function (data: any, type: any, row: any, meta: any) {
+            if (row.DistinctTotalCount > 0) {
+              var a =
+                '<a style="color: black" _ngcontent-kci-c162="" ng-reflect-router-link="/assessor_certification_details" href="/assessor_certification_details">' +
+                row.DistinctTotalCount +
+                `</button>`;
+              return a;
+            } else {
+              return '<span style="color:black">' + data + '</span>';
+            }
+          },
+        },
+
+        ]
+      });
+      $("#myTable").on("click", "tbody tr td", function () {
+        var index1 = table.row(this).index();
+        var index2 = table.column(this).index();
+        sessionStorage.setItem(
+          "SectorId",
+          json_data.QPwiseAssessorCertificationStatusCountData.CertificationStatusData[
+            index1
+          ].SectorId
+        );
+        if(index2 == 5){
+          sessionStorage.setItem('QPID', json_data.QPwiseAssessorCertificationStatusCountData.CertificationStatusData[
+            index1
+          ].QualificationPackId)
+          sessionStorage.setItem('SearchType', 'GLC')
+        }
+        if(index2 == 6){
+          sessionStorage.setItem('QPID', json_data.QPwiseAssessorCertificationStatusCountData.CertificationStatusData[
+            index1
+          ].QualificationPackId)
+          sessionStorage.setItem('SearchType', 'GAC')
+        }
+        if(index2 == 7){
+          sessionStorage.setItem('QPID', json_data.QPwiseAssessorCertificationStatusCountData.CertificationStatusData[
+            index1
+          ].QualificationPackId)
+          sessionStorage.setItem('SearchType', 'GCC')
+        }
+        if(index2 == 8){
+          sessionStorage.setItem('QPID', json_data.QPwiseAssessorCertificationStatusCountData.CertificationStatusData[
+            index1
+          ].QualificationPackId)
+          sessionStorage.setItem('SearchType', 'GEC')
+        }
+        if(index2 == 9){
+          sessionStorage.setItem('QPID', json_data.QPwiseAssessorCertificationStatusCountData.CertificationStatusData[
+            index1
+          ].QualificationPackId)
+          sessionStorage.setItem('SearchType', 'GTC')
+        }
+        if(index2 == 10){
+          sessionStorage.setItem('QPID', json_data.QPwiseAssessorCertificationStatusCountData.CertificationStatusData[
+            index1
+          ].QualificationPackId)
+          sessionStorage.setItem('SearchType', 'GDTC')
+        }
+        if(index2 == 11){
+          sessionStorage.setItem('QPID', json_data.QPwiseAssessorCertificationStatusCountData.CertificationStatusData[
+            index1
+          ].QualificationPackId)
+          sessionStorage.setItem('SearchType', 'ILC')
+        }
+        if(index2 == 12){
+          sessionStorage.setItem('QPID', json_data.QPwiseAssessorCertificationStatusCountData.CertificationStatusData[
+            index1
+          ].QualificationPackId)
+          sessionStorage.setItem('SearchType', 'IAC')
+        }
+        if(index2 == 13){
+          sessionStorage.setItem('QPID', json_data.QPwiseAssessorCertificationStatusCountData.CertificationStatusData[
+            index1
+          ].QualificationPackId)
+          sessionStorage.setItem('SearchType', 'ICC')
+        }
+        if(index2 == 14){
+          sessionStorage.setItem('QPID', json_data.QPwiseAssessorCertificationStatusCountData.CertificationStatusData[
+            index1
+          ].QualificationPackId)
+          sessionStorage.setItem('SearchType', 'ITC')
+        }
+        if(index2 == 15){
+          sessionStorage.setItem('QPID', json_data.QPwiseAssessorCertificationStatusCountData.CertificationStatusData[
+            index1
+          ].QualificationPackId)
+          sessionStorage.setItem('SearchType', 'IDTC')
+        }
+        if(index2 == 16){
+          sessionStorage.setItem('QPID', json_data.QPwiseAssessorCertificationStatusCountData.CertificationStatusData[
+            index1
+          ].QualificationPackId)
+          sessionStorage.setItem('SearchType', 'TC')
+        }
+        if(index2 == 17){
+          sessionStorage.setItem('QPID', json_data.QPwiseAssessorCertificationStatusCountData.CertificationStatusData[
+            index1
+          ].QualificationPackId)
+          sessionStorage.setItem('SearchType', 'DTC')
+        }
+
+      });
+
+    });
+    
+  }
   }
 
-  call_ajax(SecId){
+  /*call_ajax(SecId){
     $.ajax({
       url: environment.URL_QPwise_details,
       type: 'POST',
       dataType: 'json',
       data: {
         ApiKey : environment.ApiKey,
-        SectorId : SecId,
-        StartDate : sessionStorage.getItem('StartDate'),
-        EndDate : sessionStorage.getItem('EndDate')
+        SectorId : sessionStorage.getItem('SectorId'),
+        UserId : sessionStorage.getItem("UserId"),
+        UserRoleId : sessionStorage.getItem("UserroleId")
       }, 
       beforeSend: function(){
         $('#image').show();
@@ -54,35 +399,6 @@ export class JobRoleComponent implements OnInit {
     });
   }
 
-  clear(){
-    $.ajax({
-      url: environment.URL_logout_authentication,
-      type: 'POST',
-      dataType: 'json',
-      data: {
-        UserId : localStorage.getItem("userid"),
-        SessionId : sessionStorage.getItem("sessionid"),
-      }, 
-      success: (data) => {
-        var json = JSON.parse(JSON.stringify(data));
-        localStorage.setItem("Message",json.LogoutResponseData.Message);
-        if (json.LogoutResponseData.Message == "")
-        {
-            this.route.navigate(['logout']);
-        }else {
-          document.getElementById('warning').innerHTML =
-          '<b><h2>' +
-          json.CandidateAssessmentAuthentication.Message +
-          '</h2></b>';
-        $('#login').css('display', 'block');
-        $('#log-in').css('display', 'none');}
-      },
-      error: function (err) {
-        console.log('error:' + err);
-        $('#login').css('display', 'block');
-        $('#log-in').css('display', 'none');
-      },
-    });
-  }
+  
 
-}
+}*/

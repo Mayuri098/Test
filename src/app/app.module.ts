@@ -4,6 +4,13 @@ import { HighchartsChartModule } from 'highcharts-angular';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { ExcelService } from './service/excel.service';
+import { DataTablesModule } from 'angular-datatables';
+
+
+
+
 
 
 
@@ -33,6 +40,15 @@ import { AssessorDetailsComponent } from './assessor-details/assessor-details.co
 import { SuccessfulEmailSentComponent } from './successful-email-sent/successful-email-sent.component';
 import { from } from 'rxjs';
 import { ChangePasswordSuccessComponent } from './change-password-success/change-password-success.component';
+import { BarComponent } from './bar/bar.component';
+import { PieComponent } from './pie/pie.component';
+import { ModalComponent } from './modal/modal.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { HeaderComponent } from './header/header.component';
+import { PassedBatchesComponent } from './passed-batches/passed-batches.component';
+import { UpcomingBatchesComponent } from './upcoming-batches/upcoming-batches.component';
+import { TodaysBatchesComponent } from './todays-batches/todays-batches.component';
+import { TestComponent } from './test/test.component';
 
 
 @NgModule({
@@ -55,18 +71,29 @@ import { ChangePasswordSuccessComponent } from './change-password-success/change
     ReportsComponent,
     AssessorDetailsComponent,
     SuccessfulEmailSentComponent,
-    ChangePasswordSuccessComponent
+    ChangePasswordSuccessComponent,
+    BarComponent,
+    PieComponent,
+    ModalComponent,
+    NavbarComponent,
+    HeaderComponent,
+    PassedBatchesComponent,
+    UpcomingBatchesComponent,
+    TodaysBatchesComponent,
+    TestComponent
   ],
   imports: [
     BrowserModule,  
     AppRoutingModule,
     MDBBootstrapModule.forRoot(),
+    ModalModule.forRoot(),
     BsDatepickerModule.forRoot(),
     BrowserAnimationsModule,
 
     NgxPaginationModule,
     Ng2SearchPipeModule,
     HighchartsChartModule,
+    DataTablesModule
 
    
 
@@ -74,6 +101,7 @@ import { ChangePasswordSuccessComponent } from './change-password-success/change
   providers: [
     AuthService, 
     AuthGuard,
+    ExcelService
     //ChartModule,
   ],
   bootstrap: [AppComponent]

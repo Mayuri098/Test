@@ -10,9 +10,12 @@ import * as $ from 'jquery';
 })
 export class UpdateProfileComponent implements OnInit {
 
+  username : any;
+
   constructor(private route: Router) { }
 
   ngOnInit(): void {
+    this.username = sessionStorage.getItem("username");
   }
 
   clear(){
